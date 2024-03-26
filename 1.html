@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile & Timetable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative; /* 添加相对定位 */
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+        }
+        .profile-info {
+            margin-bottom: 30px;
+        }
+        .timetable {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .timetable th, .timetable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .timetable th {
+            background-color: #f2f2f2;
+        }
+        .editable-cell {
+            cursor: pointer;
+        }
+        #save-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        #payButton {
+            position: absolute; /* 添加绝对定位 */
+            bottom: 20px; /* 距离底部的距离 */
+            right: 20px; /* 距离右侧的距离 */
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        #payButton:hover {
+            background-color: #005f6b;
+        }
+        /* 样式 */
+        .button-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+    
+</head>
+<body>
+
+<div class="container">
+    <h1>User Profile & Timetable</h1>
+
+    <!-- User Profile Section -->
+    <div class="profile-info">
+        <h2>User Profile</h2>
+        <ul>
+            <li><strong>Name:</strong> <input type="text" id="name" value="John Doe"></li>
+            <li><strong>Academic Qualifications:</strong> <input type="text" id="education" value="Master"></li>
+            <li><strong>Birth Date:</strong> <input type="text" id="dob" value="1990/1/1"></li>
+            <li><strong>Postcode:</strong> <input type="text" id="address" value="100000"></li>
+            <li><strong>Job Option:</strong> 
+                <select id="job-type">
+                    <option value="清洁工">Cleaner</option>
+                    <option value="服务员">Postman</option>
+                    <option value="快递员">Waiter</option>
+                    <!-- Add more job types here -->
+                </select>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Timetable Section -->
+    <div class="timetable">
+        <h2>Timetable</h2>
+        <table id="timetable">
+            <tr>
+                <th>Time</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+                <th>Sunday</th>
+            </tr>
+            <!-- Dynamic timetable rows will be inserted here -->
+        </table>
+        <button id="save-btn">Save</button>
+    </div>
+
+    <!-- Support Us Button -->
+    <a href="支付.html" id="payButton">Support Us</a>
+    <div class="button-container">
+        <button onclick="window.location.href = '历史.html';">View the resume history</button>
+    </div>
+</div>
+
+<script>
+    // Create dynamic timetable with 24-hour slots
+    var timetable = document.getElementById('timetable');
+    for (var i = 0; i < 24; i++) {
+        var hour = i < 10 ? '0' + i : i;
+        var nextHour = (i + 1) < 10 ? '0' + (i + 1) : (i + 1);
+        var timeSlot = hour + ':00 - ' + nextHour + ':00';
+
+        var row = document.createElement('tr');
+        var timeCell = document.createElement('td');
+        timeCell.textContent = timeSlot;
+        row.appendChild(timeCell);
+
+        for (var j = 0; j < 7; j++) {
+            var cell = document.createElement('td');
+            cell.classList.add('editable-cell');
+            cell.setAttribute('data-day', j); // Set day index as data attribute
+            cell.setAttribute('data-hour', i); // Set hour index as data attribute
+            cell.textContent = '✔️'; // Initial value (can be changed later)
+            row.appendChild(cell);
+        }
+
+        timetable.appendChild(row);
+    }
+
+    // Function to toggle cell content when clicked
+    function toggleCellContent(event) {
+        if (event.target.classList.contains('editable-cell')) {
+            var currentValue = event.target.textContent.trim();
+            event.target.textContent = currentValue === '✔️' ? '' : '✔️';
+        }
+    }
+
+    // Add event listener to timetable cells
+    timetable.addEventListener('click', toggleCellContent);
+
+    // Function to save timetable data
+    function saveTimetable() {
+        var timetableData = {};
+        var cells = document.querySelectorAll('.editable-cell');
+        cells.forEach(function(cell) {
+            var day = cell.getAttribute('data-day');
+            var hour = cell.getAttribute('data-hour');
+            var value = cell.textContent.trim() === '✔️' ? true : false;
+            if (!timetableData[day]) {
+                timetableData[day] = {};
+            }
+            timetableData[day][hour] = value;
+        });
+        localStorage.setItem('timetableData', JSON.stringify(timetableData)); // Save timetable data to localStorage
+        alert('Timetable saved successfully!');
+    }
+
+    // Add event listener to save button
+    document.getElementById('save-btn').addEventListener('click', saveTimetable);
+
+    // Load timetable data from localStorage when page loads
+    window.onload = function() {
+        var
+        savedTimetableData = localStorage.getItem('timetableData');
+        if (savedTimetableData) {
+            savedTimetableData = JSON.parse(savedTimetableData);
+            var cells = document.querySelectorAll('.editable-cell');
+            cells.forEach(function(cell) {
+                var day = cell.getAttribute('data-day');
+                var hour = cell.getAttribute('data-hour');
+                if (savedTimetableData[day] && savedTimetableData[day][hour]) {
+                    cell.textContent = '✔️';
+                } else {
+                    cell.textContent = '';
+                }
+            });
+        }
+    };
+
+    // 获取工作种类选择框元素
+    var jobTypeSelect = document.getElementById('job-type');
+
+    // 添加事件监听器，监听用户选择变化
+    jobTypeSelect.addEventListener('change', function() {
+        // 获取用户选择的工作种类值
+        var selectedJobType = jobTypeSelect.value;
+
+        // 在控制台打印用户选择的工作种类值
+        console.log('用户选择的工作种类是：', selectedJobType);
+    });
+</script>
+
+</body>
+</html>

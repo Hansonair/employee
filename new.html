@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户资料与时间表</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative; /* 添加相对定位 */
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+        }
+        .profile-info {
+            margin-bottom: 30px;
+        }
+        .timetable {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .timetable th, .timetable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .timetable th {
+            background-color: #f2f2f2;
+        }
+        .editable-cell {
+            cursor: pointer;
+        }
+        #save-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        #payButton {
+            position: absolute; /* 添加绝对定位 */
+            bottom: 20px; /* 距离底部的距离 */
+            right: 20px; /* 距离右侧的距离 */
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        #payButton:hover {
+            background-color: #005f6b;
+        }
+                /* 样式 */
+        .button-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+    
+</head>
+<body>
+
+<div class="container">
+    <h1>用户资料与时间表</h1>
+
+    <!-- 用户资料部分 -->
+    <div class="profile-info">
+        <h2>用户资料</h2>
+        <ul>
+            <li><strong>姓名：</strong> <input type="text" id="name" value="张三"></li>
+            <li><strong>学历：</strong> <input type="text" id="education" value="硕士"></li>
+            <li><strong>出生日期：</strong> <input type="text" id="dob" value="1990/1/1"></li>
+            <li><strong>邮政编码：</strong> <input type="text" id="address" value="100000"></li>
+            <li><strong>工作选项：</strong> 
+                <select id="job-type">
+                    <option value="清洁工">清洁工</option>
+                    <option value="服务员">服务员</option>
+                    <option value="快递员">快递员</option>
+                    <!-- 在此处添加更多工作类型 -->
+                </select>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 时间表部分 -->
+    <div class="timetable">
+        <h2>时间表</h2>
+        <table id="timetable">
+            <tr>
+                <th></th>
+                <th>周一</th>
+                <th>周二</th>
+                <th>周三</th>
+                <th>周四</th>
+                <th>周五</th>
+                <th>周六</th>
+                <th>周日</th>
+            </tr>
+            <tr>
+                <th>上午(6-12)</th>
+                <td class="editable-cell" data-day="0" data-part="morning"></td>
+                <td class="editable-cell" data-day="1" data-part="morning"></td>
+                <td class="editable-cell" data-day="2" data-part="morning"></td>
+                <td class="editable-cell" data-day="3" data-part="morning"></td>
+                <td class="editable-cell" data-day="4" data-part="morning"></td>
+                <td class="editable-cell" data-day="5" data-part="morning"></td>
+                <td class="editable-cell" data-day="6" data-part="morning"></td>
+            </tr>
+            <tr>
+                <th>下午(12-6)</th>
+                <td class="editable-cell" data-day="0" data-part="afternoon"></td>
+                <td class="editable-cell" data-day="1" data-part="afternoon"></td>
+                <td class="editable-cell" data-day="2" data-part="afternoon"></td>
+                <td class="editable-cell" data-day="3" data-part="afternoon"></td>
+                <td class="editable-cell" data-day="4" data-part="afternoon"></td>
+                <td class="editable-cell" data-day="5" data-part="afternoon"></td>
+                <td class="editable-cell" data-day="6" data-part="afternoon"></td>
+            </tr>
+            <tr>
+                <th>晚上(6-12)</th>
+                <td class="editable-cell" data-day="0" data-part="evening"></td>
+                <td class="editable-cell" data-day="1" data-part="evening"></td>
+                <td class="editable-cell" data-day="2" data-part="evening"></td>
+                <td class="editable-cell" data-day="3" data-part="evening"></td>
+                <td class="editable-cell" data-day="4" data-part="evening"></td>
+                <td class="editable-cell" data-day="5" data-part="evening"></td>
+                <td class="editable-cell" data-day="6" data-part="evening"></td>
+            </tr>
+            <tr>
+                <th>凌晨(12-6)</th>
+                <td class="editable-cell" data-day="0" data-part="night"></td>
+                <td class="editable-cell" data-day="1" data-part="night"></td>
+                <td class="editable-cell" data-day="2" data-part="night"></td>
+                <td class="editable-cell" data-day="3" data-part="night"></td>
+                <td class="editable-cell" data-day="4" data-part="night"></td>
+                <td class="editable-cell" data-day="5" data-part="night"></td>
+                <td class="editable-cell" data-day="6" data-part="night"></td>
+            </tr>
+        </table>
+        <button id="save-btn">保存</button>
+    </div>
+
+    <!-- 支持我们按钮 -->
+    <a href="支付.html" id="payButton">支持我们</a>
+    <div class="button-container">
+        <button onclick="window.location.href = '历史.html';">查看简历历史</button>
+    </div>
+</div>
+
+<script>
+    // 当单击时切换单元格内容的函数
+    function toggleCellContent(event) {
+        if (event.target.classList.contains('editable-cell')) {
+            var currentValue = event.target.textContent.trim();
+            event.target.textContent = currentValue === '✔️' ? '' : '✔️';
+        }
+    }
+
+    // 添加事件侦听器以侦听时间表单元格
+    document.querySelectorAll('.editable-cell').forEach(function(cell) {
+        cell.addEventListener('click', toggleCellContent);
+    });
+
+    // 保存时间表数据的函数
+    function saveTimetable() {
+        var timetableData = {};
+        var cells = document.querySelectorAll('.editable-cell');
+        cells.forEach(function(cell) {
+            var day = cell.getAttribute('data-day');
+            var part = cell.getAttribute('data-part');
+            var value = cell.textContent.trim() === '✔️' ? true : false;
+            if (!timetableData[day]) {
+                timetableData[day] = {};
+            }
+            if (!timetableData[day][part]) {
+                timetableData[day][part] = {};
+            }
+            timetableData[day][part] = value;
+        });
+        console.log(timetableData);
+        // 在这里，您可以将数据发送到服务器或执行任何其他操作
+        alert('时间表已保存！');
+    }
+
+    // 添加事件侦听器以保存按钮
+    document.getElementById('save-btn').addEventListener('click', saveTimetable);
+
+    // 获取工作种类选择框元素
+    var jobTypeSelect = document.getElementById('job-type');
+
+    // 添加事件监听器，监听用户选择变化
+    jobTypeSelect.addEventListener('change', function() {
+        // 获取用户选择的工作种类值
+        var selectedJobType = jobTypeSelect.value;
+
+        // 在控制台打印用户选择的工作种类值
+        console.log('用户选择的工作种类是：', selectedJobType);
+    });
+</script>
+
+</body>
+</html>
+
